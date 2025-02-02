@@ -1,74 +1,26 @@
-const BASE_URL = "https://www.balldontlie.io/v1";
-const API_KEY = import.meta.env.VITE_API_KEY; // Dynamically load API key from .env
+import axios from "axios";
+
+const BASE_URL = "http://localhost:3000"; // Correct base URL
+const API_KEY = import.meta.env.VITE_API_KEY; // Load API key from .env
 
 /**
- * Fetches a paginated list of players.
+ * Fetches a paginated list of players using Axios.
  */
 export const fetchPlayers = async (page: number = 1, perPage: number = 10) => {
-  const response = await fetch(`${BASE_URL}/players?page=${page}&per_page=${perPage}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`, // Use the API key
-    },
-  });
+  try {
+    const response = await axios.get(`${BASE_URL}/allPlayers`, {
+      params: {
+        page,
+        per_page: perPage,
+      },
+      headers: {
+        'Authorization': '42045409-d194-4bab-b5bc-50cea9a824c1'
+      },
+    });
 
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status}`);
+    return response.data; // Return API response data
+  } catch (error) {
+    console.error("Error fetching players:", error);
+    throw new Error("Failed to fetch players.");
   }
-
-  return response.json();
-};
-
-/**
- * Fetches a list of teams.
- */
-export const fetchTeams = async () => {
-  const response = await fetch(`${BASE_URL}/teams`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`, // Use the API key
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status}`);
-  }
-
-  return response.json();
-};
-
-/**
- * Fetches a paginated list of stats.
- */
-export const fetchStats = async (page: number = 1, perPage: number = 10) => {
-  const response = await fetch(`${BASE_URL}/stats?page=${page}&per_page=${perPage}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`, // Use the API key
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status}`);
-  }
-
-  return response.json();
-};
-
-/**
- * Fetches a paginated list of games.
- */
-export const fetchGames = async (page: number = 1, perPage: number = 10) => {
-  const response = await fetch(`${BASE_URL}/games?page=${page}&per_page=${perPage}`, {
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${API_KEY}`, // Use the API key
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`Error: ${response.status}`);
-  }
-
-  return response.json();
 };

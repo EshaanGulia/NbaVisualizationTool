@@ -17,8 +17,17 @@ const PlayerDetails: React.FC = () => {
     const fetchPlayerData = async () => {
       try {
         setLoading(true);
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", "42045409-d194-4bab-b5bc-50cea9a824c1");
+        
+        const requestOptions = {
+          method: "GET",
+          headers: myHeaders
+        };
+        
+
         const response = await fetch(
-          `https://www.balldontlie.io/api/v1/players/${playerId}`
+          `https://www.balldontlie.io/api/v1/players/${playerId}`,requestOptions
         );
         const data = await response.json();
         setPlayerData(data);

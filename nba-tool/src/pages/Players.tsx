@@ -1,33 +1,44 @@
 import React, { useState, useEffect } from "react";
-import { CircularProgress, Box, Grid, Card, CardContent, Typography, Button, TextField } from "@mui/material";
-import { fetchPlayers } from "../services/api"; // Import the API function
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import {
+  CircularProgress,
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  TextField,
+} from "@mui/material";
+import { fetchPlayers } from "../services/api";
 
 const Players: React.FC = () => {
-  const [players, setPlayers] = useState<any[]>([]); // State to store players
-  const [loading, setLoading] = useState(true); // Loading state
-  const [page, setPage] = useState(1); // Current page for pagination
-  const [searchTerm, setSearchTerm] = useState(""); // Search term state
-  const [error, setError] = useState<string | null>(null); // Error state
+  const [players, setPlayers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate(); // Hook for navigation
 
   useEffect(() => {
     const loadPlayers = async () => {
       try {
         setLoading(true);
-        setError(null); // Reset error state
-        const data = await fetchPlayers(page); // Fetch players for the current page
+        setError(null);
+        const data = await fetchPlayers(page, 10);
         if (searchTerm) {
-          // Filter players by search term
           const filteredPlayers = data.data.filter((player: any) =>
-            `${player.first_name} ${player.last_name}`.toLowerCase().includes(searchTerm.toLowerCase())
+            `${player.first_name} ${player.last_name}`
+              .toLowerCase()
+              .includes(searchTerm.toLowerCase())
           );
           setPlayers(filteredPlayers);
         } else {
           setPlayers(data.data);
         }
       } catch (err) {
-        console.error("Error fetching players:", err);
-        setError("Failed to load players. Please try again.");
+        setError("Failed to load players.");
       } finally {
         setLoading(false);
       }
@@ -38,11 +49,20 @@ const Players: React.FC = () => {
 
   return (
     <Box sx={{ paddingTop: "80px", paddingX: "20px" }}>
+      {/* Back Button */}
+      <Button
+        variant="outlined"
+        onClick={() => navigate("/")} // Navigate to the home page
+        sx={{ marginBottom: "20px" }}
+      >
+        Back to Home
+      </Button>
+
       <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: "20px" }}>
         Explore Players
       </Typography>
 
-      {/* Search Field */}
+      {/* Search Input */}
       <TextField
         label="Search Players"
         variant="outlined"
@@ -53,10 +73,10 @@ const Players: React.FC = () => {
         placeholder="Enter player name..."
       />
 
-      {/* Show loading spinner */}
+      {/* Show Loading Spinner */}
       {loading && <CircularProgress />}
 
-      {/* Show error message if any */}
+      {/* Show Error Message */}
       {error && (
         <Typography variant="h6" color="error" sx={{ marginBottom: "20px" }}>
           {error}
@@ -79,15 +99,6 @@ const Players: React.FC = () => {
                   <Typography variant="body2" color="text.secondary">
                     Position: {player.position || "N/A"}
                   </Typography>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    sx={{ marginTop: "10px" }}
-                    component={Link}
-                    to={`/players/${player.id}`} // Link to player details
-                  >
-                    View Details
-                  </Button>
                 </CardContent>
               </Card>
             </Grid>
@@ -95,18 +106,18 @@ const Players: React.FC = () => {
         </Grid>
       )}
 
-      {/* Show no players message */}
+      {/* No Players Message */}
       {!loading && !error && players.length === 0 && (
         <Typography variant="h6" color="text.secondary">
           No players found. Try a different search.
         </Typography>
       )}
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <Box sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}>
         <Button
           variant="outlined"
-          disabled={page === 1} // Disable previous button on the first page
+          disabled={page === 1}
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           sx={{ marginRight: "10px" }}
         >
