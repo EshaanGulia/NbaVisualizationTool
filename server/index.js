@@ -10,7 +10,7 @@ app.use(cors());
 // Define a port
 const PORT = 3000;
 
-// Set up a simple route
+// Root route
 app.get('/', (req, res) => {
     res.send('Hello, World!');
 });
@@ -20,7 +20,7 @@ app.get('/allPlayers', async (req, res) => {
     let config = {
         method: 'get',
         maxBodyLength: Infinity,
-        url: 'https://api.balldontlie.io/v1/players?page=1&per_page=10',
+        url: 'https://api.balldontlie.io/v1/players',
         headers: { 
             'Authorization': '42045409-d194-4bab-b5bc-50cea9a824c1',
         },
@@ -28,7 +28,7 @@ app.get('/allPlayers', async (req, res) => {
 
     try {
         const response = await axios.request(config);
-        console.log('Players Response: ', response.data);
+        console.log('Players Response:', response.data);
         res.status(200).json(response.data);
     } catch (error) {
         console.error('Error fetching players:', error.message);
@@ -49,7 +49,7 @@ app.get('/allTeams', async (req, res) => {
 
     try {
         const response = await axios.request(config);
-        console.log('Teams Response: ', response.data);
+        console.log('Teams Response:', response.data);
         res.status(200).json(response.data);
     } catch (error) {
         console.error('Error fetching teams:', error.message);

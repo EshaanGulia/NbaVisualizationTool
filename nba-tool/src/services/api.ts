@@ -1,26 +1,34 @@
-import axios from "axios";
+import axios from 'axios';
 
-const BASE_URL = "http://localhost:3000"; // Correct base URL
-const API_KEY = import.meta.env.VITE_API_KEY; // Load API key from .env
+const BASE_URL = 'http://localhost:3000'; // Your server's base URL
 
 /**
- * Fetches a paginated list of players using Axios.
+ * Fetches all players from the server.
  */
 export const fetchPlayers = async (page: number = 1, perPage: number = 10) => {
   try {
     const response = await axios.get(`${BASE_URL}/allPlayers`, {
-      params: {
-        page,
-        per_page: perPage,
-      },
-      headers: {
-        'Authorization': '42045409-d194-4bab-b5bc-50cea9a824c1'
-      },
+      params: { page, perPage },
     });
+    return response.data;
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+    console.error("Error fetching players:", errorMessage);
+    throw new Error(errorMessage);
+  }
+};
 
-    return response.data; // Return API response data
-  } catch (error) {
-    console.error("Error fetching players:", error);
-    throw new Error("Failed to fetch players.");
+/**
+ * Fetches all teams from the server.
+ */
+export const fetchTeams = async () => {
+  try {
+    const response = await axios.get(`${BASE_URL}/allTeams`);
+    console.log('Teams from server:', response.data);
+    return response.data;
+  } catch (err: unknown) {
+    const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
+    console.error('Error fetching teams:', errorMessage);
+    throw new Error(errorMessage);
   }
 };

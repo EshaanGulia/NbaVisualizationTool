@@ -1,78 +1,76 @@
-import React from "react";
-import { Box, Typography, Button, Grid } from "@mui/material";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Box, Button, Typography } from "@mui/material";
+import { motion } from "framer-motion";
 
 const Home: React.FC = () => {
+  const navigate = useNavigate();
+
   return (
     <Box
       sx={{
+        width: "100vw",
+        height: "100vh",
         display: "flex",
         flexDirection: "column",
-        alignItems: "center",
         justifyContent: "center",
-        height: "100vh", // Full viewport height
-        width: "100vw", // Full viewport width
-        textAlign: "center",
-        backgroundColor: "#f8f9fa", // Light gray background
-        margin: 0, // Remove any default margin
-        padding: 0, // Remove any default padding
+        alignItems: "center",
+        background: "linear-gradient(135deg, #1c1c1c, #3a3a3a)", // Black to light grey
+        color: "#fff",
+        overflow: "hidden", // Prevents scrolling
       }}
     >
-      {/* Header */}
-      <Typography variant="h2" sx={{ fontWeight: "bold", marginBottom: "20px" }}>
-        Welcome to the NBA Visualization Tool
-      </Typography>
-      <Typography variant="h6" sx={{ marginBottom: "40px", color: "#555" }}>
-        Explore NBA players, teams, games, stats, and more!
-      </Typography>
+      {/* Animated Title */}
+      <motion.div
+        initial={{ y: -20 }}
+        animate={{ y: [0, -20, 0] }} // Bouncing animation
+        transition={{
+          duration: 1.5,
+          repeat: Infinity,
+          repeatType: "loop",
+        }}
+      >
+        <Typography
+          variant="h3"
+          sx={{
+            fontWeight: "bold",
+            textAlign: "center",
+            marginBottom: "30px",
+          }}
+        >
+          Welcome to the NBA Visualization Tool
+        </Typography>
+      </motion.div>
 
-      {/* Navigation Buttons */}
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/players"
-            sx={{ textTransform: "none", fontWeight: "bold", padding: "10px 20px" }}
-          >
-            Explore Players
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="secondary"
-            component={Link}
-            to="/teams"
-            sx={{ textTransform: "none", fontWeight: "bold", padding: "10px 20px" }}
-          >
-            Explore Teams
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="primary"
-            component={Link}
-            to="/games"
-            sx={{ textTransform: "none", fontWeight: "bold", padding: "10px 20px" }}
-          >
-            View Games
-          </Button>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="outlined"
-            color="secondary"
-            component={Link}
-            to="/stats"
-            sx={{ textTransform: "none", fontWeight: "bold", padding: "10px 20px" }}
-          >
-            View Stats
-          </Button>
-        </Grid>
-      </Grid>
+      {/* Buttons */}
+      <Box sx={{ display: "flex", gap: "20px" }}>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/players")}
+          sx={{
+            background: "#fff",
+            color: "#000",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            "&:hover": { background: "#e0e0e0" },
+          }}
+        >
+          Explore Players
+        </Button>
+
+        <Button
+          variant="contained"
+          onClick={() => navigate("/teams")}
+          sx={{
+            background: "#fff",
+            color: "#000",
+            fontWeight: "bold",
+            padding: "10px 20px",
+            "&:hover": { background: "#e0e0e0" },
+          }}
+        >
+          Explore Teams
+        </Button>
+      </Box>
     </Box>
   );
 };
