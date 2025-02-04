@@ -1,34 +1,49 @@
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:3000'; // Your server's base URL
+const BASE_URL = 'http://localhost:3000';
 
-/**
- * Fetches all players from the server.
- */
+// Fetch all players
 export const fetchPlayers = async (page: number = 1, perPage: number = 10) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/allPlayers`, {
-      params: { page, perPage },
-    });
-    return response.data;
-  } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-    console.error("Error fetching players:", errorMessage);
-    throw new Error(errorMessage);
-  }
+    try {
+        const response = await axios.get(`${BASE_URL}/allPlayers`, {
+            params: { page, perPage },
+        });
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching players:", err);
+        throw new Error("Failed to fetch players.");
+    }
 };
 
-/**
- * Fetches all teams from the server.
- */
+// Fetch a specific player
+export const fetchPlayerById = async (id: string | undefined) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/players/${id}`);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching player:", err);
+        throw new Error("Failed to fetch player.");
+    }
+};
+
+// Fetch all teams
 export const fetchTeams = async () => {
-  try {
-    const response = await axios.get(`${BASE_URL}/allTeams`);
-    console.log('Teams from server:', response.data);
-    return response.data;
-  } catch (err: unknown) {
-    const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-    console.error('Error fetching teams:', errorMessage);
-    throw new Error(errorMessage);
-  }
+    try {
+        const response = await axios.get(`${BASE_URL}/allTeams`);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching teams:", err);
+        throw new Error("Failed to fetch teams.");
+    }
+};
+
+// Fetch a specific team
+export const fetchTeamById = async (id: string | undefined) => {
+    try {
+        const response = await axios.get(`${BASE_URL}/teams/${id}`);
+        return response.data;
+    } catch (err) {
+        console.error("Error fetching team:", err);
+        throw new Error("Failed to fetch team.");
+    }
 };

@@ -1,95 +1,60 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  CircularProgress,
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Button,
-} from '@mui/material';
-import { fetchTeams } from '../services/api';
+import { Link } from "react-router-dom";
+import { Box, Grid, Card, CardContent, Typography } from "@mui/material";
+import { fetchTeams } from "../services/api";
+import { useState, useEffect } from "react";
 
-const Teams: React.FC = () => {
-  const [teams, setTeams] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const Teams = () => {
+    const [teams, setTeams] = useState<any[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  const navigate = useNavigate();
+    useEffect(() => {
+        const loadTeams = async () => {
+            try {
+                const data = await fetchTeams();
+                if (!data || !data.data) throw new Error("No team data found.");
+                setTeams(data.data);
+            } catch (err) {
+                console.error("Error fetching teams:", err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-  useEffect(() => {
-    const loadTeams = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await fetchTeams(); // Fetch teams via API
-        setTeams(data.data);
-      } catch (err: unknown) {
-        const errorMessage = err instanceof Error ? err.message : "An unknown error occurred";
-        console.error("Error loading teams:", errorMessage);
-        setError(errorMessage);
-      } finally {
-        setLoading(false);
-      }
-    };
+        loadTeams();
+    }, []);
 
-    loadTeams();
-  }, []);
+    if (loading) return <p>Loading teams...</p>;
 
-  return (
-    <Box sx={{ paddingTop: '80px', paddingX: '20px' }}>
-      {/* Back Button */}
-      <Button
-        variant="outlined"
-        onClick={() => navigate('/')}
-        sx={{ marginBottom: '20px' }}
-      >
-        Back to Home
-      </Button>
+    return (
+        <Box sx={{ padding: "20px" }}>
+            <Typography variant="h4" sx={{ fontWeight: "bold", marginBottom: "20px" }}>
+                NBA Teams
+            </Typography>
 
-      <Typography variant="h4" sx={{ fontWeight: 'bold', marginBottom: '20px' }}>
-        Explore NBA Teams
-      </Typography>
-
-      {/* Loading */}
-      {loading && <CircularProgress />}
-
-      {/* Error */}
-      {error && (
-        <Typography variant="h6" color="error" sx={{ marginBottom: '20px' }}>
-          {error}
-        </Typography>
-      )}
-
-      {/* Display Teams */}
-      {!loading && !error && teams.length > 0 && (
-        <Grid container spacing={3}>
-          {teams.map((team) => (
-            <Grid item xs={12} sm={6} md={4} key={team.id}>
-              <Card sx={{ boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)', padding: '10px' }}>
-                <CardContent>
-                  <Typography variant="h6">{team.full_name}</Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Abbreviation: {team.abbreviation}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    City: {team.city}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Conference: {team.conference}
-                  </Typography>
-                  <Typography variant="body2" color="text.secondary">
-                    Division: {team.division}
-                  </Typography>
-                </CardContent>
-              </Card>
+            <Grid container spacing={3}>
+                {teams.map((team) => (
+                    <Grid item xs={12} sm={6} md={4} key={team.id}>
+                        <Card
+                            component={Link}
+                            to={`/teams/${team.id}`} // 🔥 Navigates to team details
+                            sx={{
+                                textDecoration: "none",
+                                cursor: "pointer",
+                                transition: "transform 0.2s",
+                                "&:hover": { transform: "scale(1.05)" },
+                            }}
+                        >
+                            <CardContent>
+                                <Typography variant="h6">{team.full_name}</Typography>
+                                <Typography variant="body2">City: {team.city}</Typography>
+                                <Typography variant="body2">Conference: {team.conference}</Typography>
+                            </CardContent>
+                        </Card>
+                    </Grid>
+                ))}
             </Grid>
-          ))}
-        </Grid>
-      )}
-    </Box>
-  );
+        </Box>
+    );
 };
 
 export default Teams;

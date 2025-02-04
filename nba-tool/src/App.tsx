@@ -1,34 +1,21 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 import Home from "./pages/Home";
 import Players from "./pages/Players";
+import PlayerDetails from "./pages/PlayerDetails";
 import Teams from "./pages/Teams";
-
-// Define a modern theme
-const theme = createTheme({
-  palette: {
-    primary: { main: "#1976D2" }, // Blue
-    secondary: { main: "#FF6D00" }, // Orange
-    background: { default: "#F4F6F8" }, // Light gray
-  },
-  typography: {
-    fontFamily: "Arial, sans-serif",
-    h4: { fontWeight: "bold" },
-  },
-});
+import TeamDetails from "./pages/TeamDetails";
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <Router>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/players" element={<Players />} />
-          <Route path="/teams" element={<Teams />} />
-        </Routes>
-      </Router>
-    </ThemeProvider>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/players" element={<Players />} />
+        <Route path="/players/:id" element={<PlayerDetails />} />
+        <Route path="/teams" element={<Teams />} />
+        <Route path="/teams/:id" element={<TeamDetails />} />
+      </Routes>
+    </Router>
   );
 }
 
